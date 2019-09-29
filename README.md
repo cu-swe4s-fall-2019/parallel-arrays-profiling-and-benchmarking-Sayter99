@@ -12,15 +12,16 @@ Parallel Arrays, Profiling, and Benchmarking
 To use this package, you need to have [Python3](https://www.python.org/download/releases/3.0/) in your environment. And the used packages are listed below.
 
 ### Used Packages
-* argparse
 * os
 * sys
 * math
-* pycodestyle
+* time
 * numpy
 * random
+* argparse
 * unittest
 * matplotlib
+* pycodestyle
 
 ## Usage
 `plot_gtex.py` is the main program for generating boxplots from `GTEX` data.
@@ -36,6 +37,7 @@ Examples of using `plot_gtex.py`:
 * Tested and developed iteratively
 * Profiling and benchmarking the programs
 * Modified `travis.yaml` to carry out added tests
+* Complete the `README.md` with performance analysis
 
 ## Profiling and Benchmarking
 
@@ -51,6 +53,8 @@ We can easily compare the total time of each function call in `plot_gtex.binary_
   * result: **1.39 sec** and **75844 KB**
 According to the results, we can roughly calculate the performance improvement of the whole process:
 *Improvement percentage = (14.32 - 1.39)/1.39 ~= **930.2158%** increased*
+
+We may also notice that the memory usage is also increased *(75844 - 74804)/74804 = 1.39%*, however, our application, data analysis, is usually run on desktop platform which has a lot of memory capacity. Therefore, it is totally reasonable to choose **900%** speed improvement with sacrificing **1.39%** memory usage.
 
 ### Results of time.time() function
 In this section, I measured the different parts of each version.
