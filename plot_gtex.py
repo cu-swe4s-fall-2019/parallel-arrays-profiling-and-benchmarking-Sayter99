@@ -3,6 +3,7 @@ import gzip
 import sys
 import os
 import argparse
+import time
 
 
 # parse arguments
@@ -98,6 +99,8 @@ def parse_meta(group, file):
 
         sample_idx = linear_search('SAMPID', metadata_header)
         target_idx = linear_search(group, metadata_header)
+        if (target_idx == -1):
+            return [], []
         samples.append(sample_info[sample_idx])
         target_group.append(sample_info[target_idx])
     return samples, target_group
@@ -125,6 +128,10 @@ def main():
     samples, target_group = parse_meta(
         args.group_type, args.sample_attributes)
 
+    if (len(target_group) == 0):
+        print('Cannot find group_type')
+        sys.exit(1)
+
     # necessary header
     version = None
     dim = None
@@ -146,7 +153,12 @@ def main():
                 rna_header_plus_index.append([rna_header[i], i])
             # prepare for binary search
             # sorting at first
+
+            # time.time() benchmarking
+            # sort_start = time.time()
             rna_header_plus_index.sort()
+            # sort_end = time.time()
+            # print(sort_end - sort_start)
             continue
 
         rna_counts = l.rstrip().split('\t')
@@ -160,6 +172,7 @@ def main():
             attrs = list(set(target_group))
             attrs.sort()
             par_array = []
+            # search_loop_start = time.time()
             for attr in attrs:
                 attr_idxs = linear_search_all_hits(attr, target_group)
 
@@ -179,6 +192,8 @@ def main():
             data_viz.boxplot(par_array, attrs, args.group_type,
                              'Gene read counts', target_gene_name,
                              args.output_file)
+            # search_loop_end = time.time()
+            # print(search_loop_end - search_loop_start)
             sys.exit(0)
 
     sys.exit(0)
