@@ -9,7 +9,7 @@ import numpy as np
 import os
 
 
-class TestMathLib(unittest.TestCase):
+class TestPlotGtex(unittest.TestCase):
     def test_boxplot(self):
         random_dists = ['Normal', ' Lognormal', 'Exp', 'Gumbel',
                         'Triangular']
@@ -36,6 +36,15 @@ class TestMathLib(unittest.TestCase):
         self.assertEqual(r, 2)
 
         r = plot_gtex.linear_search(10, L)
+        self.assertEqual(r, -1)
+
+    def test_binary_search(self):
+        L = [[1, 0], [2, 1], [3, 2], [4, 3], [5, 4], [6, 5]]
+
+        r = plot_gtex.binary_search(3, L)
+        self.assertEqual(r, 2)
+
+        r = plot_gtex.binary_search(10, L)
         self.assertEqual(r, -1)
 
 
