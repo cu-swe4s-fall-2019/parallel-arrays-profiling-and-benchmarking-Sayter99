@@ -7,7 +7,7 @@ matplotlib.use('Agg')
 def boxplot(data, meta, x_label, y_label, title, out_file):
     """plot boxplot for input parallel array and save the result as a png file
     """
-    fig, ax1 = plt.subplots(figsize=(12, 8))
+    fig, ax1 = plt.subplots(figsize=(10, 6))
 
     ax1.boxplot(data)
 
