@@ -61,18 +61,18 @@ def linear_search_all_hits(key, L):
 
 
 def binary_serach(key, L):
-    lo = -1
-    hi = len(L)
-    while (hi - lo > 1):
+    lo = 0
+    hi = len(L)-1
+    while (hi > lo):
         mid = (hi + lo) // 2
 
         if key == L[mid][0]:
             return L[mid][1]
 
         if (key < L[mid][0]):
-            hi = mid
+            hi = mid - 1
         else:
-            lo = mid
+            lo = mid + 1
 
     return -1
 
