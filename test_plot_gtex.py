@@ -47,6 +47,18 @@ class TestPlotGtex(unittest.TestCase):
         r = plot_gtex.binary_search(10, L)
         self.assertEqual(r, -1)
 
+    def test_linear_search_hit(self):
+        L = ['a', 'b', 'a', 'b', 'c', 'a']
+
+        r = plot_gtex.linear_search_all_hits('a', L)
+        self.assertEqual(r, [0, 2, 5])
+
+        r = plot_gtex.linear_search_all_hits('b', L)
+        self.assertEqual(r, [1, 3])
+
+        r = plot_gtex.linear_search_all_hits('d', L)
+        self.assertEqual(r, [])
+
 
 if __name__ == '__main__':
     unittest.main()

@@ -40,6 +40,7 @@ Examples of using `plot_gtex.py`:
 ## Profiling and Benchmarking
 
 ### Results of cProfile
+We can easily compare the total time of each function call in `plot_gtex.binary_search.txt` and `plot_gtex.linear_search.txt`. In `plot_gtex.linear_search.txt`, the most interesting part is the total time of `linear_search` function. It's **17.707** secs, **87.489%** of the total process. So, we absolutely need to improve this method to speed up the whole process. By leveraging the `binary search` algorithm, we amazingly speeded it up a lot. In `plot_gtex.binary_search.txt`, we already reduced the total time of `linear_search` to **0.023** secs with the small overhead (`sort`: **0.001** secs and `binary_search`: **0.068** secs). To conclude, by this simple and basic technique, we do improve the `plot_gtex` considerably. Thus, we can conclude that profiling and complexity analysis play important roles in software engineering.
 
 ### Results of Time command
 * linear search version
@@ -48,3 +49,18 @@ Examples of using `plot_gtex.py`:
 * binary search version
   * command: same as linear search version
   * result: **1.39 sec** and **75844 KB**
+According to the results, we can roughly calculate the performance improvement of the whole process:
+*Improvement percentage = (14.32 - 1.39)/1.39 ~= **930.2158%** increased*
+
+### Results of time.time() function
+In this section, I measured the different parts of each version.
+
+For linear search, I leverage `time.time()` to measure the main loop for generating 2D arrays:
+* `main loop`: **12.206398** sec
+
+For binary search, I leverage `time.time()` to measure the extra `sort` and the main loop for generating 2D arrays:
+* `sort`: **0.0006568** sec
+* `main loop`: **0.8194587** sec
+
+According to the results, we can rougly calculate the performance improvement by utilizing `binary search` by
+*Improvement percentage = (12.206398 - (0.8194587 + 0.0006568))/(0.8194587 + 0.0006568) ~= **1388.375%** increased*
