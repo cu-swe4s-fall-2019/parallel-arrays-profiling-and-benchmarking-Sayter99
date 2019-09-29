@@ -45,6 +45,8 @@ def parse_args():
 
 
 def linear_search(key, L):
+    """ return index with matched key
+    """
     for i in range(len(L)):
         if key == L[i]:
             return i
@@ -52,7 +54,8 @@ def linear_search(key, L):
 
 
 def linear_search_all_hits(key, L):
-    """Gives indices not values"""
+    """ Gives indices not values
+    """
     hit = []
     for i in range(len(L)):
         if key == L[i]:
@@ -60,10 +63,13 @@ def linear_search_all_hits(key, L):
     return hit
 
 
-def binary_serach(key, L):
+def binary_search(key, L):
+    """ [content, index]
+    search content and return index
+    """
     lo = 0
     hi = len(L)-1
-    while (hi > lo):
+    while (lo <= hi):
         mid = (hi + lo) // 2
 
         if key == L[mid][0]:
@@ -78,6 +84,8 @@ def binary_serach(key, L):
 
 
 def parse_meta(group, file):
+    """ save meta data to samples and target_group
+    """
     metadata_header = None
     samples = []
     target_group = []
@@ -117,6 +125,7 @@ def main():
     samples, target_group = parse_meta(
         args.group_type, args.sample_attributes)
 
+    # necessary header
     version = None
     dim = None
     rna_header = None
@@ -135,6 +144,9 @@ def main():
             rna_header_plus_index = []
             for i in range(len(rna_header)):
                 rna_header_plus_index.append([rna_header[i], i])
+            # prepare for binary search
+            # sorting at first
+            rna_header_plus_index.sort()
             continue
 
         rna_counts = l.rstrip().split('\t')
@@ -153,8 +165,12 @@ def main():
 
                 attr_counts = []
                 for attr_idx in attr_idxs:
-                    rna_header_idx = linear_search(
-                        samples[attr_idx], rna_header)
+                    # linear
+                    # rna_header_idx = linear_search(samples[attr_idx],
+                    #                                rna_header)
+                    # binary search
+                    rna_header_idx = binary_search(samples[attr_idx],
+                                                   rna_header_plus_index)
                     if rna_header_idx == -1:
                         continue
                     count = rna_counts[rna_header_idx]

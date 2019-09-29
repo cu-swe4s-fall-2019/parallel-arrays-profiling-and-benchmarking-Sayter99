@@ -42,6 +42,9 @@ Examples of using `plot_gtex.py`:
 ### Results of cProfile
 
 ### Results of Time command
-* linear version
+* linear search version
   * command: `/usr/bin/time -f '%e\t%M' python3 plot_gtex.py --gene_reads GTEx_Analysis_2017-06-05_v8_RNASeQCv1.1.9_gene_reads.acmg_59.gct.gz --sample_attributes GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt --gene ACTA2 --group_type SMTS --output_file test1.png`
   * result: **14.32 sec** and **74804 KB**
+* binary search version
+  * command: same as linear search version
+  * result: **1.39 sec** and **75844 KB**
