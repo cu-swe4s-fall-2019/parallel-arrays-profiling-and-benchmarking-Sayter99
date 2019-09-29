@@ -4,6 +4,7 @@ import math
 import statistics
 import data_viz
 import random
+import plot_gtex
 import numpy as np
 import os
 
@@ -27,6 +28,15 @@ class TestMathLib(unittest.TestCase):
         # check the result is generated successfully or not
         self.assertTrue(os.path.exists('test_box_plot.png'))
         os.remove('test_box_plot.png')
+
+    def test_linear_search(self):
+        L = [1, 2, 3, 4, 5, 6]
+
+        r = plot_gtex.linear_search(3, L)
+        self.assertEqual(r, 2)
+
+        r = plot_gtex.linear_search(10, L)
+        self.assertEqual(r, -1)
 
 
 if __name__ == '__main__':
