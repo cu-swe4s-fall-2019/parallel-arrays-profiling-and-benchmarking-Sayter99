@@ -1,0 +1,3 @@
+[submodule "hash_table"]
+	path = hash_table
+	url = https://github.com/cu-swe4s-fall-2019/hash-tables-Sayter99
