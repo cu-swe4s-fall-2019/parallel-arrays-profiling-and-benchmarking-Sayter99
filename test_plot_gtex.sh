@@ -3,7 +3,7 @@
 test -e ssshtest || wget https://raw.githubusercontent.com/ryanlayer/ssshtest/master/ssshtest
 . ssshtest
 
-run test_style pycodestyle plot_gtex.py
+run test_style pycodestyle plot_gtex.py --ignore=E402
 assert_no_stdout
 run test_style pycodestyle data_viz.py
 assert_no_stdout
