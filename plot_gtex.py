@@ -5,8 +5,8 @@ import os
 import argparse
 import time
 sys.path.append('hash_table')
-from hash_table import hash_tables
 from hash_table import hash_functions
+from hash_table import hash_tables
 
 
 # parse arguments
@@ -72,7 +72,7 @@ def binary_search(key, L):
     search content and return index
     """
     lo = 0
-    hi = len(L)-1
+    hi = len(L) - 1
     while (lo <= hi):
         mid = (hi + lo) // 2
 
@@ -107,7 +107,7 @@ def parse_meta(group, file):
         key = sample_info[target_idx]
         value = sample_info[sample_idx]
         search = ht.search(key)
-        if (search == None):
+        if (search is None):
             ht.add(key, [value])
             target_group.append(key)
         else:
@@ -169,18 +169,19 @@ def main():
 
         if rna_counts[description_idx] == target_gene_name:
             par_array = []
-            rna_map = hash_tables.LinearProbe(1000000, hash_functions.h_rolling)
+            rna_map = hash_tables.LinearProbe(
+                1000000, hash_functions.h_rolling)
             for i in range(description_idx + 1, len(rna_header)):
                 rna_map.add(rna_header[i], int(rna_counts[i]))
             # search_loop_start = time.time()
             for attr in target_group:
                 attr_counts = []
                 meta_find = meta_map.search(attr)
-                if meta_find == None:
+                if meta_find is None:
                     continue
                 for sample_name in meta_find:
                     count = rna_map.search(sample_name)
-                    if count == None:
+                    if count is None:
                         continue
                     attr_counts.append(count)
                 par_array.append(attr_counts)
