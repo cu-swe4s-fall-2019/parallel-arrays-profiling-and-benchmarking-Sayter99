@@ -92,7 +92,7 @@ def parse_meta(group, file):
     """
     metadata_header = None
     target_group = []
-    ht = hash_tables.LinearProbe(1000000, hash_functions.h_rolling)
+    ht = hash_tables.ChainedHash(100000, hash_functions.h_ascii)
     for l in open(file):
         sample_info = l.rstrip().split('\t')
 
@@ -169,8 +169,8 @@ def main():
 
         if rna_counts[description_idx] == target_gene_name:
             par_array = []
-            rna_map = hash_tables.LinearProbe(
-                1000000, hash_functions.h_rolling)
+            rna_map = hash_tables.ChainedHash(
+                100000, hash_functions.h_ascii)
             for i in range(description_idx + 1, len(rna_header)):
                 rna_map.add(rna_header[i], int(rna_counts[i]))
             # search_loop_start = time.time()
@@ -185,11 +185,11 @@ def main():
                         continue
                     attr_counts.append(count)
                 par_array.append(attr_counts)
-            # search_loop_end = time.time()
-            # print(search_loop_end - search_loop_start)
             data_viz.boxplot(par_array, target_group, args.group_type,
                              'Gene read counts', target_gene_name,
                              args.output_file)
+            # search_loop_end = time.time()
+            # print(search_loop_end - search_loop_start)
             sys.exit(0)
 
     sys.exit(0)
