@@ -38,6 +38,8 @@ Examples of using `plot_gtex.py`:
 * Profiling and benchmarking the programs
 * Modified `travis.yaml` to carry out added tests
 * Complete the `README.md` with performance analysis
+* Added Git submodule of the hash table
+* Used hash table to plot the data
 
 ## Profiling and Benchmarking
 
@@ -51,8 +53,11 @@ We can easily compare the total time of each function call in `plot_gtex.binary_
 * binary search version
   * command: same as linear search version
   * result: **1.39 sec** and **75844 KB**
-According to the results, we can roughly calculate the performance improvement of the whole process:
-*Improvement percentage = (14.32 - 1.39)/1.39 ~= **930.2158%** increased*
+  * According to the results, we can roughly calculate the performance improvement of the whole process: *Improvement percentage = (14.32 - 1.39)/1.39 ~= **930.2158%** increased*
+* hash table
+  * command: same as linear search version
+  * result: **1.51** and **87244 KB**
+  * Although it's slightly slower than binary search version, its searching process is slightly faster. Thus, we can conclude that it can be faster while the data size gets larger.
 
 We may also notice that the memory usage is also increased *(75844 - 74804)/74804 = 1.39%*, however, our application, data analysis, is usually run on desktop platform which has a lot of memory capacity. Therefore, it is totally reasonable to choose **900%** speed improvement with sacrificing **1.39%** memory usage.
 
@@ -65,6 +70,8 @@ For linear search, I leverage `time.time()` to measure the main loop for generat
 For binary search, I leverage `time.time()` to measure the extra `sort` and the main loop for generating 2D arrays:
 * `sort`: **0.0006568** sec
 * `main loop`: **0.8194587** sec
+* According to the results, we can rougly calculate the performance improvement by utilizing `binary search` by *Improvement percentage = (12.206398 - (0.8194587 + 0.0006568))/(0.8194587 + 0.0006568) ~= **1388.375%** increased*
 
-According to the results, we can rougly calculate the performance improvement by utilizing `binary search` by
-*Improvement percentage = (12.206398 - (0.8194587 + 0.0006568))/(0.8194587 + 0.0006568) ~= **1388.375%** increased*
+For hash table, I leverage `time.time()` to measure the extra `sort` and the main loop for generating 2D arrays:
+* `main loop`: **0.7903129** sec
+* It is slightly faster than the binary search version. The performance influences by the implementation of hash function, hash table, key value similarity, and data size.
