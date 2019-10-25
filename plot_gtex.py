@@ -4,6 +4,9 @@ import sys
 import os
 import argparse
 import time
+sys.path.append('hash_table')
+from hash_table import hash_tables
+from hash_table import hash_functions
 
 
 # parse arguments
@@ -88,8 +91,8 @@ def parse_meta(group, file):
     """ save meta data to samples and target_group
     """
     metadata_header = None
-    samples = []
     target_group = []
+    ht = hash_tables.LinearProbe(1000000, hash_functions.h_rolling)
     for l in open(file):
         sample_info = l.rstrip().split('\t')
 
@@ -100,10 +103,16 @@ def parse_meta(group, file):
         sample_idx = linear_search('SAMPID', metadata_header)
         target_idx = linear_search(group, metadata_header)
         if (target_idx == -1):
-            return [], []
-        samples.append(sample_info[sample_idx])
-        target_group.append(sample_info[target_idx])
-    return samples, target_group
+            return None, target_group
+        key = sample_info[target_idx]
+        value = sample_info[sample_idx]
+        search = ht.search(key)
+        if (search == None):
+            ht.add(key, [value])
+            target_group.append(key)
+        else:
+            search.append(value)
+    return ht, target_group
 
 
 def main():
@@ -125,10 +134,11 @@ def main():
         sys.exit(1)
 
     target_gene_name = args.gene
-    samples, target_group = parse_meta(
-        args.group_type, args.sample_attributes)
+    meta_map, target_group = parse_meta(args.group_type,
+                                        args.sample_attributes)
+    target_group.sort()
 
-    if (len(target_group) == 0):
+    if (meta_map is None):
         print('Cannot find group_type')
         sys.exit(1)
 
@@ -148,52 +158,37 @@ def main():
 
         if rna_header is None:
             rna_header = l.rstrip().split('\t')
-            rna_header_plus_index = []
-            for i in range(len(rna_header)):
-                rna_header_plus_index.append([rna_header[i], i])
-            # prepare for binary search
-            # sorting at first
-
-            # time.time() benchmarking
-            # sort_start = time.time()
-            rna_header_plus_index.sort()
-            # sort_end = time.time()
-            # print(sort_end - sort_start)
+            description_idx = linear_search('Description', rna_header)
             continue
 
         rna_counts = l.rstrip().split('\t')
-        description_idx = linear_search('Description', rna_header)
 
         if description_idx == -1:
             print('Gene not found in header')
             sys.exit(1)
 
         if rna_counts[description_idx] == target_gene_name:
-            attrs = list(set(target_group))
-            attrs.sort()
             par_array = []
+            rna_map = hash_tables.LinearProbe(1000000, hash_functions.h_rolling)
+            for i in range(description_idx + 1, len(rna_header)):
+                rna_map.add(rna_header[i], int(rna_counts[i]))
             # search_loop_start = time.time()
-            for attr in attrs:
-                attr_idxs = linear_search_all_hits(attr, target_group)
-
+            for attr in target_group:
                 attr_counts = []
-                for attr_idx in attr_idxs:
-                    # linear
-                    # rna_header_idx = linear_search(samples[attr_idx],
-                    #                                rna_header)
-                    # binary search
-                    rna_header_idx = binary_search(samples[attr_idx],
-                                                   rna_header_plus_index)
-                    if rna_header_idx == -1:
+                meta_find = meta_map.search(attr)
+                if meta_find == None:
+                    continue
+                for sample_name in meta_find:
+                    count = rna_map.search(sample_name)
+                    if count == None:
                         continue
-                    count = rna_counts[rna_header_idx]
-                    attr_counts.append(int(count))
+                    attr_counts.append(count)
                 par_array.append(attr_counts)
-            data_viz.boxplot(par_array, attrs, args.group_type,
-                             'Gene read counts', target_gene_name,
-                             args.output_file)
             # search_loop_end = time.time()
             # print(search_loop_end - search_loop_start)
+            data_viz.boxplot(par_array, target_group, args.group_type,
+                             'Gene read counts', target_gene_name,
+                             args.output_file)
             sys.exit(0)
 
     sys.exit(0)
